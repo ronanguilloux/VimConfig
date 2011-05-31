@@ -1,0 +1,12 @@
+irssi/config.autosave
+mpd/*
+!mpd/mpd.conf
+mutt/cache
+mutt/certificates
+weechat/logs
+weechat/weechat.log
+weechat/weeget
+weechat/xfer
+weechat/irc.conf
+weechat/jabber.conf
+vimperator/info

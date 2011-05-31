@@ -1,0 +1,8 @@
+# Routing
+
+snippet route
+	<route id="${1:route_id}" pattern="/${2:url_pattern}">
+		<default key="_controller">${3:controller}</default>
+		<requirement key="_method">${4:GET}</requirement>
+	</route>
+	${5}

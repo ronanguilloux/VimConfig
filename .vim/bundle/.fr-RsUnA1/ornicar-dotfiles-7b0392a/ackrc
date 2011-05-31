@@ -1,0 +1,12 @@
+# Use "less -r" as my pager                                                                                                                                        
+--pager=less -r
+
+# Ignore some dirs
+--ignore-dir=cache
+--ignore-dir=logs
+
+# Vim like case sensitivity
+--smart-case
+
+# Twig type
+--type-set=twig=.twig

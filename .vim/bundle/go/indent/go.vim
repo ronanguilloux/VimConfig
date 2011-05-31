@@ -1,0 +1,1 @@
+/home/ronan/workspace/go/misc/vim/indent/go.vim

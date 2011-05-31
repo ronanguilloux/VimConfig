@@ -1,0 +1,1 @@
+/home/ronan/workspace/go/misc/vim/ftplugin/go/import.vim
