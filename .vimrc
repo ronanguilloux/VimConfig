@@ -19,15 +19,15 @@ endif
 call pathogen#helptags()
 call pathogen#runtime_append_all_bundles()
 
-
 " ------------------------------------------------------------------------------------
 " Basics
 " ------------------------------------------------------------------------------------
 syntax on
 let mapleader=","               " the leader character
+set shortmess=atI               " no more “Press ENTER or type command to continue”
 set nocompatible                " explicitly get out of vi-compatible mode
 set noerrorbells                " do not make any noise!
-set novisualbell                " don't use the visual bell
+set visualbell                  " use the visual bell
 set number                      " precede each line with its line number
 set mouse=a                     " normal+visual+insert+command-line modes for mouse
 set showcmd                     " show the command being typed
@@ -40,16 +40,45 @@ set nobackup                    " do not backup files on overwrite
 set undolevels=1000             " use many levels of undo
 set noundofile                  " don't keep a persistent undofile
 set title                       " display the default title at the top of the window
-set wildmenu                    " long autocompletion showing various solutions
+set wildmenu                    " long autocompletion shrowing various solutions
 set wildmode=list:longest       " make it longest
 set wildignore=*.o,*.fasl,*.obj,*.bak,*.exe,*.pyc,*.jpg,*.gif,*.png " ignoring this
-set shortmess=atI               " no more “Press ENTER or type command to continue”
 set clipboard+=unnamed          " share windows clipboard
 set fileformats=unix,dos,mac    " support all three, in this order
 set shell=/bin/bash
-" set scrolloff=3               " cursor start the scrolling three lines before the bottom border
+set scrolloff=3                 " cursor start the scrolling three lines before the bottom border
+
 " When vimrc is edited, reload it
 autocmd! bufwritepost vimrc source ~/.vimrc
+
+
+" Run NERDTree on load
+autocmd vimenter * NERDTree
+
+" ------------------------------------------------------------------------------------
+" Gvim conf
+" ------------------------------------------------------------------------------------
+if has('gui_running')
+    set guifont=Monaco\ Bold\ 10
+endif
+
+" ------------------------------------------------------------------------------------
+" Colorscheme solarized - https://github.com/altercation/vim-colors-solarized
+" ------------------------------------------------------------------------------------
+"let g:solarized_termcolors = 256
+let g:solarized_termtrans = 0
+let g:solarized_degrade = 0
+let g:solarized_bold = 0
+let g:solarized_underline = 1
+let g:solarized_italic = 1
+let g:solarized_contrast = "normal"
+let g:solarized_visibility = "normal"
+syntax enable
+set background=dark
+"colorscheme solarized
+colorscheme default
+" option name default optional
+" ------------------------------------------------
 
 
 " ------------------------------------------------------------------------------------
@@ -63,15 +92,15 @@ set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ %r%{CurDir()}%h\ \ \ Line:\ %l/%L\
 " ------------------------------------------------------------------------------------
 " Folding
 " ------------------------------------------------------------------------------------
-set foldenable                                      " Turn on folding
 " set foldmarker={,} " Fold C style code (only use this as default if you use a high foldlevel)
-set foldmethod=marker                               " Fold on the marker
-set foldlevel=100 " Don't autofold anything (but I can still fold manually)
-set foldopen=block,hor,mark,percent,quickfix,tag " what movements open folds
-function SimpleFoldText()
-    return getline(v:foldstart).' '
-endfunction
-set foldtext=SimpleFoldText() " Custom fold text function (cleaner than default)
+set nofoldenable                                      " Turn off folding
+"set foldmethod=marker                               " Fold on the marker
+"set foldlevel=100 " Don't autofold anything (but I can still fold manually)
+"set foldopen=block,hor,mark,percent,quickfix,tag " what movements open folds
+"function SimpleFoldText()
+"    return getline(v:foldstart).' '
+"endfunction
+"set foldtext=SimpleFoldText() " Custom fold text function (cleaner than default)
 
 
 " ------------------------------------------------------------------------------------
@@ -80,6 +109,43 @@ set foldtext=SimpleFoldText() " Custom fold text function (cleaner than default)
 filetype on
 filetype plugin on
 filetype indent on
+
+
+" ------------------------------------------------------------------------------------
+" Invisible character
+" ------------------------------------------------------------------------------------
+nmap <leader>l :set list!<CR>
+set listchars=nbsp:¤,tab:>-,trail:¤,extends:>,precedes:<,eol:¬,trail:·
+
+" ------------------------------------------------------------------------------------
+" Highlight current line
+" ------------------------------------------------------------------------------------
+set cursorline
+hi CursorLine term=underline cterm=underline
+
+" ------------------------------------------------------------------------------------
+" Highlight & remove trailing whitespaces
+" ------------------------------------------------------------------------------------
+highlight ExtraWhitespace ctermbg=red guibg=red
+match ExtraWhitespace /\s\+$/
+autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
+autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+autocmd BufWinLeave * call clearmatches()
+
+" ------------------------------------------------------------------------------------
+" Automatically remove trailing whitespace before write
+" ------------------------------------------------------------------------------------
+function! StripTrailingWhitespace()
+    normal mZ
+    %s/\s\+$//e
+    if line("'Z") != line(".")
+        echo "Stripped whitespace\n"
+    endif
+    normal `Z
+endfunction
+" don't include .md below, empty spaces are parsed by markdown
+autocmd BufWritePre *.txt,*.twig,*.php,*.yml,*.xml,*.js,*.html,*.css,*.java,*.c,*.cpp,*.vim :call StripTrailingWhitespace()
 
 
 " ------------------------------------------------------------------------------------
@@ -98,7 +164,6 @@ set encoding=UTF-8              " display UTF-8
 set showmatch                   " show matching (){}[]
 set mat=2                       " how many tenths of a second to blink
 set autoread                    " if current file is modified by another IDE, vim will refresh it
-set nocursorline                " become anoying whith time
 set listchars=tab:>-,trail:-    " show tabs and trailing
 set report=0                    " tell us when anything is changed via :...
 set gfn=Monospace\ 10
@@ -167,6 +232,7 @@ autocmd BufRead,BufNewFile *.phps set filetype=php   " .phps files handled like 
 "autocmd FileType php noremap <C-M> :w!<CR>:!/usr/bin/php %<CR>
 " PHP parser check (CTRL-L)
 autocmd FileType php noremap <C-L> :!/usr/bin/php -l %<CR>
+autocmd FileType php noremap <C-M> :!/usr/bin/phpcs --standard=PEAR %<CR>
 let g:debuggerPort = 9000
 
 
@@ -180,11 +246,11 @@ autocmd FileType sql set omnifunc=sqlcomplete#Complete
 " PDV : phpDocumentor for Vim
 " see http://stackoverflow.com/questions/3298820/vim-phpdoc-multiline-comment-autoindent
 " ------------------------------------------------------------------------------------
-let g:pdv_cfg_Author = "Ronan"
 let g:pdv_cfg_Version = "$Id$"
 let g:pdv_cfg_Author = "Ronan Guilloux <ronan.guilloux@gmail.com>"
 let g:pdv_cfg_Copyright = "Copyleft (ɔ) 2011 Ronan Guilloux"
 let g:pdv_cfg_License = "{@link http://www.gnu.org/licenses/agpl.txt} GNU AFFERO GPL v3"
+let g:pdv_cfg_php4always = 0 " Ignore PHP4 tags
 nnoremap <leader>d :call PhpDocSingle()<CR>
 vnoremap <leader>d :call PhpDocRange()<CR>
 set formatoptions+=or           " fix <Enter> in /* ...  */ new lines
@@ -214,6 +280,31 @@ let g:symfony_fuf = 1
 map <leader>sa :Saction <CR>
 map <leader>sv :Sview <CR>
 
+
+" ------------------------------------------------------------------------------------
+" Behat
+" see https://github.com/veloce/vim-behat
+" ------------------------------------------------------------------------------------
+let feature_filetype='behat'
+
+
+" ------------------------------------------------------------------------------------
+" Markdown
+" ------------------------------------------------------------------------------------
+au! BufRead,BufNewFile *.markdown,*.md set filetype=mkd
+au! BufRead,BufNewFile *.md set filetype=mkd
+
+" ------------------------------------------------------------------------------------
+" reStructuredText
+" ------------------------------------------------------------------------------------
+au! BufRead,BufNewFile *.rst set filetype=rst
+
+" ------------------------------------------------------------------------------------
+" Twig
+" ------------------------------------------------------------------------------------
+au BufNewFile,BufRead *.twig set filetype=twig
+" Twig surrounding
+let g:surround_{char2nr('-')} = "{% \r %}"
 
 " ------------------------------------------------------------------------------------
 " Latex
@@ -340,12 +431,19 @@ autocmd BufEnter *.txt set spell
 autocmd BufEnter *.txt set spelllang=   " no default lang
 set nospell
 
+" ------------------------------------------------------------------------------------
+" Xml formating
+" usage : vim badFormatted.xml => will open & immediatly format any bad formatted xml file 
+" see http://vim.wikia.com/wiki/Format_your_xml_document_using_xmllint
+" ------------------------------------------------------------------------------------
+au FileType xml exe ":silent 1,$!xmllint --format --recover - 2>/dev/null"
+
 
 " ------------------------------------------------------------------------------------
 " Javascript
 " see http://amix.dk/vim/vimrc.html
 " ------------------------------------------------------------------------------------
-autocmd FileType javascript call JavaScriptFold()
+"autocmd FileType javascript call JavaScriptFold()
 autocmd FileType javascript setl fen
 autocmd FileType javascript setl nocindent
 

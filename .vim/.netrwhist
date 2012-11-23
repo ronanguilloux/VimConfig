@@ -1,10 +1,8 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =8
-let g:netrw_dirhist_1='/home/ronan'
-let g:netrw_dirhist_2='/home/ronan/workspace/GITHUB/PhpLib/lib'
-let g:netrw_dirhist_3='/home/ronan/workspace/GITHUB/PhpLib'
-let g:netrw_dirhist_4='/home/ronan/workspace/GITHUB/PhpLib/lib'
-let g:netrw_dirhist_5='/home/ronan/workspace/GITHUB/VimConfig/.vim'
-let g:netrw_dirhist_6='/home/ronan/workspace/GITHUB/VimConfig'
-let g:netrw_dirhist_7='/home/ronan/workspace/GITHUB/rgMailHide/autoloads'
-let g:netrw_dirhist_8='/home/ronan/.vim/bundle/taglist/plugin'
+let g:netrw_dirhist_cnt =6
+let g:netrw_dirhist_1='/home/ronan/Workspace/github/IsoCodes/.git/hooks'
+let g:netrw_dirhist_2='/home/ronan/Workspace/github/ShakeTheNations/src'
+let g:netrw_dirhist_3='/home/ronan/Workspace/github/Geocoder/src/Geocoder/Helper'
+let g:netrw_dirhist_4='/home/ronan/Workspace/github/php-gpio/tests/PhpGpio/Tests/PhpGpio'
+let g:netrw_dirhist_5='/home/ronan/Workspace/github/IsoCodes'
+let g:netrw_dirhist_6='/home/ronan/.vim'

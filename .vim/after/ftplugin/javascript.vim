@@ -5,4 +5,4 @@ endif
 let b:javascript_ftplugin_loaded = 1
 
 " don't use cindent for javascript
-setlocal nocindent
+"setlocal nocindent
