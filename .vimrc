@@ -22,7 +22,10 @@ call pathogen#runtime_append_all_bundles()
 " ------------------------------------------------------------------------------------
 " Basics
 " ------------------------------------------------------------------------------------
-syntax on
+if has("syntax")
+    syntax on
+endif
+
 let mapleader=","               " the leader character
 set shortmess=atI               " no more “Press ENTER or type command to continue”
 set nocompatible                " explicitly get out of vi-compatible mode
@@ -54,6 +57,8 @@ autocmd! bufwritepost vimrc source ~/.vimrc
 
 " Run NERDTree on load
 autocmd vimenter * NERDTree
+" How can I close vim if the only window left open is a NERDTree?
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
 " ------------------------------------------------------------------------------------
 " Gvim conf
@@ -106,10 +111,9 @@ set nofoldenable                                      " Turn off folding
 " ------------------------------------------------------------------------------------
 " Filetype : enable loading the plugins + indent file for specific file types
 " ------------------------------------------------------------------------------------
-filetype on
-filetype plugin on
-filetype indent on
-
+if has("autocmd")
+    filetype plugin indent on
+endif
 
 " ------------------------------------------------------------------------------------
 " Invisible character
@@ -161,6 +165,7 @@ set directory=~/.vim/tmp/,~/.tmp,~/tmp,/var/tmp,/tmp   " Keep swap files in one 
 set ff=unix                     " unix EOL
 set fileencoding=UTF-8          " speak UTF-8
 set encoding=UTF-8              " display UTF-8
+set autowrite                   " write the contents of the file, if it has been modified (:next, :make),
 set showmatch                   " show matching (){}[]
 set mat=2                       " how many tenths of a second to blink
 set autoread                    " if current file is modified by another IDE, vim will refresh it
@@ -223,7 +228,6 @@ nmap <silent> <leader>/ :let @/=""<cr>
 " see http://vim.wikia.com/wiki/Runtime_syntax_check_for_php
 " ------------------------------------------------------------------------------------
 set makeprg=php\ -l\ %          " php syntax check while using make
-set autowrite                   " write the contents of the file, if it has been modified,
 let php_sql_query = 1           " sql request colorization
 let php_htmlInStrings = 1       " html tags colorization
 autocmd FileType php set omnifunc=phpcomplete#CompletePHP
@@ -234,6 +238,20 @@ autocmd BufRead,BufNewFile *.phps set filetype=php   " .phps files handled like 
 autocmd FileType php noremap <C-L> :!/usr/bin/php -l %<CR>
 autocmd FileType php noremap <C-M> :!/usr/bin/phpcs --standard=PEAR %<CR>
 let g:debuggerPort = 9000
+
+
+" ------------------------------------------------------------------------------------
+" VIM-PHP-CS-FIXER : https://github.com/stephpy/vim-php-cs-fixer
+" ------------------------------------------------------------------------------------
+let g:php_cs_fixer_path = "/usr/local/bin/php-cs-fixer" " define the path to the php-cs-fixer.phar
+let g:php_cs_fixer_level = "all"                " which level ?
+let g:php_cs_fixer_config = "default"           " configuration
+let g:php_cs_fixer_php_path = "php"             " Path to PHP
+let g:php_cs_fixer_fixers_list = ""             " List of fixers
+let g:php_cs_fixer_enable_default_mapping = 1   " Enable the mapping by default (<leader>pcd)
+let g:php_cs_fixer_dry_run = 0                  " Call command with dry-run option
+let g:php_cs_fixer_verbose = 0                  " Return the output of command if 1, else an inline information.
+
 
 
 " ------------------------------------------------------------------------------------
@@ -319,6 +337,8 @@ let g:Tex_DefaultTargetFormat = 'pdf'
 " see http://go-lang.cat-v.org/text-editors/vim/
 " ------------------------------------------------------------------------------------
 autocmd BufRead,BufNewFile *.go set filetype=go
+set rtp+=$GOROOT/misc/vim
+syntax on
 
 
 " ------------------------------------------------------------------------------------
